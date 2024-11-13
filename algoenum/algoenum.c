@@ -32,7 +32,7 @@
 #include <io.h>
 #include <stdio.h>
 
-#include "bclist.h"
+#include "BCryptList.h"
 
 // ======== Private constants ========
 
