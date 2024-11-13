@@ -89,8 +89,11 @@ void listForType(const ULONG algorithmType) {
 		return;
 	}
 
+	// There will never be more than 65,635 algorithms.
+
+	// Pointer to algorithm identifier.
 	BCRYPT_ALGORITHM_IDENTIFIER* pActAlgo = pAlgoList;
-	for (ULONG i = 0; i < algoCount; i++) {
+	for (ULONG i = algoCount; i > 0; i--) {
 		fputws(L"   ", stdout);
 		_putws(pActAlgo->pszName);
 		pActAlgo++;

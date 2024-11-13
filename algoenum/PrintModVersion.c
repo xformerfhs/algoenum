@@ -22,16 +22,22 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.0.0
+// Version: 1.0.1
 //
 // Change history:
 //    2024-11-12: V1.0.0: Created.
+//    2024-11-13: V1.0.1: Created.
 //
 
 #include <Windows.h>
 #include <stdio.h>
 
 #include "ApiErrorHandler.h"
+
+// ======== Private data ========
+
+// Hopefully the file path will be less than 1,023 characters...
+WCHAR fileName[1024];
 
 // ======== Public methods ========
 
@@ -55,9 +61,6 @@ void PrintModuleVersion(WCHAR const * moduleName) {
 
    // 2. Get the file name from the module handle.
    
-   // Hopefully the file path will be less than 1,023 characters...
-   WCHAR fileName[1024];
-
    GetModuleFileNameW(hModule, fileName, sizeof(fileName)/sizeof(WCHAR));
    if (GetLastError() != 0) {
       PrintLastError(functionName, L"GetModuleFileName");;
