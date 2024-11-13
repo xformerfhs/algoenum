@@ -109,7 +109,7 @@ void listForType(const ULONG algorithmType) {
 void ListAllTypes() {
 	fputws(L"\nList of Bcrypt ", stdout);
 	PrintModuleVersion(L"bcrypt.dll");
-	_putws(L" algorithms by type : ");
+	_putws(L" algorithms by type:");
 
 	listForType(BCRYPT_CIPHER_OPERATION);
 	listForType(BCRYPT_HASH_OPERATION);
