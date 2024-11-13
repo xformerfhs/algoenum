@@ -58,8 +58,8 @@ void PrintModuleVersion(WCHAR const * moduleName) {
    // Hopefully the file path will be less than 1,023 characters...
    WCHAR fileName[1024];
 
-   DWORD fileNameLength = GetModuleFileNameW(hModule, fileName, sizeof(fileName)/sizeof(WCHAR));
-   if (fileNameLength == 0) {
+   GetModuleFileNameW(hModule, fileName, sizeof(fileName)/sizeof(WCHAR));
+   if (GetLastError() != 0) {
       PrintLastError(functionName, L"GetModuleFileName");;
       return;
    }
