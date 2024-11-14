@@ -35,7 +35,6 @@
 
 #include "ApiErrorHandler.h"
 #include "PrintModVersion.h"
-#include "SortNames.h"
 
 // ======== Private constants ========
 
@@ -102,6 +101,17 @@ LPWSTR* copyAlgorithmNames(const HANDLE hHeap, BCRYPT_ALGORITHM_IDENTIFIER* pAlg
 	return pSortedList;
 }
 
+
+/// <summary>
+/// Comparison function for qsort.
+/// </summary>
+/// <param name="a">Pointer to one element.</param>
+/// <param name="b">Pointer to other element.</param>
+/// <returns>Negative, if *a is less than *b, 0, if *a == *b and, positive, if *a greater than *b.</returns>
+int compareNames(const void* a, const void* b) {
+	return wcscmp(*(LPWSTR const*)a, *(LPWSTR const*)b);
+}
+
 /// <summary>
 /// Print the list of algorithm names for the specified type.
 /// </summary>
@@ -123,7 +133,7 @@ BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
 	if (pSortedList == NULL)
 		return FALSE;
 
-	SortList(pSortedList, algoCount);
+	qsort(pSortedList, algoCount, sizeof(LPWSTR), compareNames);
 
 	// Pointer to algorithm identifier.
 	LPWSTR* pActAlgoName = pSortedList;
