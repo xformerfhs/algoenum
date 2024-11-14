@@ -80,6 +80,13 @@ void printAlgorithmTypeName(const ULONG algorithmType) {
 	}
 }
 
+/// <summary>
+/// Copy the pointer to the algorithm names from the BCrypt algorithm list into a local memory area.
+/// </summary>
+/// <param name="hHeap">Handle of the local heap.</param>
+/// <param name="pAlgoList">Pointer to the list of BCrypt algorithm identifiers.</param>
+/// <param name="algoCount">Number of algorithms.</param>
+/// <returns>Pointer to the local copy of the algorithm name pointers.</returns>
 LPWSTR* copyAlgorithmNames(const HANDLE hHeap, BCRYPT_ALGORITHM_IDENTIFIER* pAlgoList, const ULONG algoCount) {
 	WCHAR const* functionName = L"copyAlgorithmNames";
 
@@ -119,8 +126,10 @@ int compareNames(const void* a, const void* b) {
 BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
 	WCHAR const* functionName = L"listForType";
 
+	// 1. Print the algorithm type.
 	printAlgorithmTypeName(algorithmType);
 
+	// 2. Get the list of algorithms of this type.
 	ULONG algoCount;
 	BCRYPT_ALGORITHM_IDENTIFIER* pAlgoList;
 	NTSTATUS nts = BCryptEnumAlgorithms(algorithmType, &algoCount, &pAlgoList, 0);
@@ -129,11 +138,19 @@ BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
 		return FALSE;
 	}
 
+	// 3. Sort the algorithm names.
+
+	// 3.1 Copy the pointers to the names into a local memory area.
+
+	// Pointer to list of string pointers to algorithm names.
 	LPWSTR* pSortedList = copyAlgorithmNames(hHeap, pAlgoList, algoCount);
 	if (pSortedList == NULL)
 		return FALSE;
 
+	// 3.2 Sort the string pointers in the list.
 	qsort(pSortedList, algoCount, sizeof(LPWSTR), compareNames);
+
+	// 4. Print the sorted list of names.
 
 	// Pointer to algorithm identifier.
 	LPWSTR* pActAlgoName = pSortedList;
@@ -143,9 +160,11 @@ BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
 		pActAlgoName++;
 	}
 
+	// 5. Release memory.
 	HeapFree(hHeap, 0, pSortedList);
 	BCryptFreeBuffer(pAlgoList);
 
+	// 6. Add a new line.
 	_putws(L"");
 
 	return TRUE;
@@ -159,16 +178,21 @@ BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
 unsigned char ListAllTypes() {
 	WCHAR const* functionName = L"ListAllTypes";
 
+	// 1. Print header.
 	fputws(L"\nList of Bcrypt ", stdout);
 	PrintModuleVersion(L"bcrypt.dll");
 	_putws(L" algorithms by type:");
 	
+	// 2. Get the process heap to use in the list functions.
+	
+	// Process heap.
 	HANDLE hHeap = GetProcessHeap();
 	if (hHeap == NULL) {
 		PrintLastError(functionName, L"GetProcessHeap");
 		return RC_ERR;
 	}
 
+	// 3. Print lists for each type.
 	if (listForType(hHeap, BCRYPT_CIPHER_OPERATION) == FALSE)
 		return RC_ERR;
 	if (listForType(hHeap, BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION) == FALSE)
