@@ -73,7 +73,7 @@ void printAlgorithmTypeName(const ULONG algorithmType) {
 		break;
 
 	case BCRYPT_RNG_OPERATION:
-		_putws(L"Pseudo Random Number Generators:\n");
+		_putws(L"Pseudorandom Number Generators:\n");
 		break;
 
 	default:
