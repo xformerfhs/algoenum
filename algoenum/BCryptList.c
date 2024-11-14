@@ -46,7 +46,7 @@ void printAlgorithmTypeName(const ULONG algorithmType) {
 
 	switch (algorithmType) {
 	case BCRYPT_CIPHER_OPERATION:
-		_putws(L"Ciphers:\n");
+		_putws(L"Symmetric ciphers:\n");
 		break;
 
 	case BCRYPT_HASH_OPERATION:
@@ -54,7 +54,7 @@ void printAlgorithmTypeName(const ULONG algorithmType) {
 		break;
 
 	case BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION:
-		_putws(L"Asymmetric operations:\n");
+		_putws(L"Asymmetric ciphers:\n");
 		break;
 
 	case BCRYPT_SECRET_AGREEMENT_OPERATION:
@@ -62,11 +62,11 @@ void printAlgorithmTypeName(const ULONG algorithmType) {
 		break;
 
 	case BCRYPT_SIGNATURE_OPERATION:
-		_putws(L"Signature operations:\n");
+		_putws(L"Signatures:\n");
 		break;
 
 	case BCRYPT_RNG_OPERATION:
-		_putws(L"PRNG algoritmhs:\n");
+		_putws(L"PRNGs:\n");
 		break;
 
 	default:
