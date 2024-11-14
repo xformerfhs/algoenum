@@ -1,5 +1,5 @@
 //
-// SPDX-FileCopyrightText: Copyright 2023 Frank Schwab
+// SPDX-FileCopyrightText: Copyright 2023-2024 Frank Schwab
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -22,10 +22,11 @@
 // 
 // Author: Frank Schwab
 //
-// Version: 1.0.0
+// Version: 1.0.1
 //
 // Change history:
 //    2024-06-01: V1.0.0: Created.
+//    2024-11-14: V1.0.1: Return code depends on result of printing the lists.
 //
 
 #include <fcntl.h>
@@ -46,7 +47,8 @@ int __cdecl wmain(int const argc, wchar_t const* argv[]) {
 	(void)_setmode(_fileno(stdout), _O_U16TEXT);  // So the console (stdout) is able to display unicode characters
 	(void)_setmode(_fileno(stderr), _O_U16TEXT);  // So the console (stderr) is able to display unicode characters
 
-	ListAllTypes();
-
-	return RC_OK;
+	if (ListAllTypes() == 0)
+		return RC_OK;
+	else
+		return RC_PROC_ERR;
 }

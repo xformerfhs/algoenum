@@ -22,10 +22,11 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.0.0
+// Version: 1.1.0
 //
 // Change history:
 //    2023-12-01: V1.0.0: Created.
+//    2024-12-14: V1.1.0: Sort algorithm name lists.
 //
 
 #include <Windows.h>
@@ -34,6 +35,12 @@
 
 #include "ApiErrorHandler.h"
 #include "PrintModVersion.h"
+#include "SortNames.h"
+
+// ======== Private constants ========
+
+#define RC_OK 0
+#define RC_ERR 0xff
 
 // ======== Private methods ========
 
@@ -66,7 +73,7 @@ void printAlgorithmTypeName(const ULONG algorithmType) {
 		break;
 
 	case BCRYPT_RNG_OPERATION:
-		_putws(L"PRNGs:\n");
+		_putws(L"Pseudo Random Number Generators:\n");
 		break;
 
 	default:
@@ -74,34 +81,64 @@ void printAlgorithmTypeName(const ULONG algorithmType) {
 	}
 }
 
+LPWSTR* copyAlgorithmNames(const HANDLE hHeap, BCRYPT_ALGORITHM_IDENTIFIER* pAlgoList, const ULONG algoCount) {
+	WCHAR const* functionName = L"copyAlgorithmNames";
+
+	LPWSTR* pSortedList = HeapAlloc(hHeap, 0, algoCount * sizeof(LPWSTR));
+	if (pSortedList == NULL) {
+		PrintLastError(functionName, L"HeapAlloc");
+		return pSortedList;
+	}
+
+	// Pointer to algorithm identifier.
+	BCRYPT_ALGORITHM_IDENTIFIER* pActAlgo = pAlgoList;
+	LPWSTR* pName = pSortedList;
+	for (ULONG i = algoCount; i > 0; i--) {
+		*pName = pActAlgo->pszName;
+		pActAlgo++;
+		pName++;
+	}
+
+	return pSortedList;
+}
+
 /// <summary>
 /// Print the list of algorithm names for the specified type.
 /// </summary>
 /// <param name="listType">BCrypt algorithm type.</param>
-void listForType(const ULONG algorithmType) {
+BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
+	WCHAR const* functionName = L"listForType";
+
 	printAlgorithmTypeName(algorithmType);
-	
+
 	ULONG algoCount;
 	BCRYPT_ALGORITHM_IDENTIFIER* pAlgoList;
 	NTSTATUS nts = BCryptEnumAlgorithms(algorithmType, &algoCount, &pAlgoList, 0);
 	if (nts < 0) {
-		PrintNtStatus(L"ListForType", L"BCryptEnumAlgorithms", nts);
-		return;
+		PrintNtStatus(functionName, L"BCryptEnumAlgorithms", nts);
+		return FALSE;
 	}
 
-	// There will never be more than 65,635 algorithms.
+	LPWSTR* pSortedList = copyAlgorithmNames(hHeap, pAlgoList, algoCount);
+	if (pSortedList == NULL)
+		return FALSE;
+
+	SortList(pSortedList, algoCount);
 
 	// Pointer to algorithm identifier.
-	BCRYPT_ALGORITHM_IDENTIFIER* pActAlgo = pAlgoList;
+	LPWSTR* pActAlgoName = pSortedList;
 	for (ULONG i = algoCount; i > 0; i--) {
 		fputws(L"   ", stdout);
-		_putws(pActAlgo->pszName);
-		pActAlgo++;
+		_putws(*pActAlgoName);
+		pActAlgoName++;
 	}
 
+	HeapFree(hHeap, 0, pSortedList);
 	BCryptFreeBuffer(pAlgoList);
 
 	_putws(L"");
+
+	return TRUE;
 }
 
 // ======== Public methods ========
@@ -109,15 +146,31 @@ void listForType(const ULONG algorithmType) {
 /// <summary>
 /// Print the names of all BCrypt algorithms.
 /// </summary>
-void ListAllTypes() {
+unsigned char ListAllTypes() {
+	WCHAR const* functionName = L"ListAllTypes";
+
 	fputws(L"\nList of Bcrypt ", stdout);
 	PrintModuleVersion(L"bcrypt.dll");
 	_putws(L" algorithms by type:");
+	
+	HANDLE hHeap = GetProcessHeap();
+	if (hHeap == NULL) {
+		PrintLastError(functionName, L"GetProcessHeap");
+		return RC_ERR;
+	}
 
-	listForType(BCRYPT_CIPHER_OPERATION);
-	listForType(BCRYPT_HASH_OPERATION);
-	listForType(BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION);
-	listForType(BCRYPT_SECRET_AGREEMENT_OPERATION);
-	listForType(BCRYPT_SIGNATURE_OPERATION);
-	listForType(BCRYPT_RNG_OPERATION);
+	if (listForType(hHeap, BCRYPT_CIPHER_OPERATION) == FALSE)
+		return RC_ERR;
+	if (listForType(hHeap, BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION) == FALSE)
+		return RC_ERR;
+	if (listForType(hHeap, BCRYPT_HASH_OPERATION) == FALSE)
+		return RC_ERR;
+	if (listForType(hHeap, BCRYPT_SECRET_AGREEMENT_OPERATION) == FALSE)
+		return RC_ERR;
+	if (listForType(hHeap, BCRYPT_SIGNATURE_OPERATION) == FALSE)
+		return RC_ERR;
+	if (listForType(hHeap, BCRYPT_RNG_OPERATION) == FALSE)
+		return RC_ERR;
+
+	return RC_OK;
 }

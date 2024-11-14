@@ -136,15 +136,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="algoenum.c" />
+    <ClCompile Include="AlgoEnum.c" />
     <ClCompile Include="ApiErrorHandler.c" />
     <ClCompile Include="BCryptList.c" />
     <ClCompile Include="PrintModVersion.c" />
+    <ClCompile Include="SortNames.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApiErrorHandler.h" />
     <ClInclude Include="BCryptList.h" />
     <ClInclude Include="PrintModVersion.h" />
+    <ClInclude Include="SortNames.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -63,7 +63,7 @@ void PrintModuleVersion(WCHAR const * moduleName) {
    
    GetModuleFileNameW(hModule, fileName, sizeof(fileName)/sizeof(WCHAR));
    if (GetLastError() != 0) {
-      PrintLastError(functionName, L"GetModuleFileName");;
+      PrintLastError(functionName, L"GetModuleFileName");
       return;
    }
 
@@ -72,7 +72,7 @@ void PrintModuleVersion(WCHAR const * moduleName) {
    // The size of the file version information.
    DWORD fileVersionInfoSize = GetFileVersionInfoSizeW(fileName, NULL);
    if (fileVersionInfoSize == 0) {
-      PrintLastError(functionName, L"GetFileVersionInfoSize");;
+      PrintLastError(functionName, L"GetFileVersionInfoSize");
       return;
    }
 
@@ -81,14 +81,14 @@ void PrintModuleVersion(WCHAR const * moduleName) {
    // The handle of the process heap.
    HANDLE hHeap = GetProcessHeap();
    if (hHeap == NULL) {
-      PrintLastError(functionName, L"GetProcessHeap");;
+      PrintLastError(functionName, L"GetProcessHeap");
       return;
    }
 
    // The pointer to the memory that will hold the opaque file version information blob.
    LPVOID pFileVersionInfo = HeapAlloc(hHeap, 0, fileVersionInfoSize);
    if (pFileVersionInfo == NULL) {
-      PrintLastError(functionName, L"HeapAlloc");;
+      PrintLastError(functionName, L"HeapAlloc");
       return;
    }
 

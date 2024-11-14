@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="algoenum.c">
+    <ClCompile Include="AlgoEnum.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ApiErrorHandler.c">
@@ -27,6 +27,9 @@
     <ClCompile Include="PrintModVersion.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SortNames.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApiErrorHandler.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PrintModVersion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SortNames.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
