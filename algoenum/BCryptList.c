@@ -114,7 +114,7 @@ LPWSTR* copyAlgorithmNames(const HANDLE hHeap, BCRYPT_ALGORITHM_IDENTIFIER* pAlg
 /// </summary>
 /// <param name="a">Pointer to one element.</param>
 /// <param name="b">Pointer to other element.</param>
-/// <returns>Negative, if *a is less than *b, 0, if *a == *b and, positive, if *a greater than *b.</returns>
+/// <returns>Negative, if *a is less than *b, 0, if *a == *b and positive, if *a greater than *b.</returns>
 int compareNames(const void* a, const void* b) {
 	return wcscmp(*(LPWSTR const*)a, *(LPWSTR const*)b);
 }
