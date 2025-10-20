@@ -32,22 +32,22 @@
 #include <bcrypt.h>
 #include <stdio.h>
 
-// ======== Private constants ========
+// ******** Private constants ********
 
 #define MESSAGE_BUFFER_LENGTH 256
 
-// ======== Private variables ========
+// ******** Private variables ********
 
 WCHAR messageBuffer[MESSAGE_BUFFER_LENGTH];
 
-// ======== Private methods ========
+// ******** Private methods ********
 
 /// <summary>
 /// Get the text for an NTSTATUS.
 /// </summary>
 /// <param name="errorNumber">NTSTATUS to get the text for.</param>
 /// <returns>Length of message text. A value of 0 indicates that no message could be found.</returns>
-DWORD getNtStatusErrorMessage(const DWORD errorNumber) {
+static DWORD getNtStatusErrorMessage(const DWORD errorNumber) {
 	// For *all* NTSTATUS codes it is necessary to look them up in "ntdll.dll"!
 	HMODULE ntdllModule = GetModuleHandleW(L"ntdll.dll");
 	DWORD msgLen = FormatMessageW(FORMAT_MESSAGE_FROM_HMODULE | FORMAT_MESSAGE_IGNORE_INSERTS,
@@ -65,7 +65,7 @@ DWORD getNtStatusErrorMessage(const DWORD errorNumber) {
 /// </summary>
 /// <param name="errorNumber">Error code.</param>
 /// <returns>Length of message text. A value of 0 indicates that no message could be found.</returns>
-DWORD getSystemErrorMessage(const DWORD errorNumber) {
+static DWORD getSystemErrorMessage(const DWORD errorNumber) {
 	DWORD msgLen = FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 											NULL,
 											errorNumber,
@@ -83,7 +83,7 @@ DWORD getSystemErrorMessage(const DWORD errorNumber) {
 /// <param name="apiName">Name of the failing Windows API function.</param>
 /// <param name="errorNumber">Error number.</param>
 /// <param name="isNtStatus">Is the error number an NTSTATUS.</param>
-void printError(WCHAR const* functionName, WCHAR const* apiName, DWORD const errorNumber, BOOL const isNtStatus) {
+static void printError(const PWCHAR functionName, const PWCHAR apiName, const DWORD errorNumber, const BOOL isNtStatus) {
 	DWORD msgLen;
 	if (isNtStatus == FALSE) {
 		msgLen = getSystemErrorMessage(errorNumber);
@@ -108,7 +108,7 @@ void printError(WCHAR const* functionName, WCHAR const* apiName, DWORD const err
 	}
 }
 
-// ======== Public methods ========
+// ******** Public methods ********
 
 /// <summary>
 /// Print the error message for a Windows error code.
@@ -116,7 +116,7 @@ void printError(WCHAR const* functionName, WCHAR const* apiName, DWORD const err
 /// <param name="functionName">Name of the function calling the failing Windows API function.</param>
 /// <param name="apiName">Name of the failing Windows API function.</param>
 /// <param name="errorNumber">Error number.</param>
-void PrintWinError(WCHAR const* functionName, WCHAR const* apiName, DWORD const errorNumber) {
+void PrintWinError(const PWCHAR functionName, const PWCHAR apiName, const DWORD errorNumber) {
 	printError(functionName, apiName, errorNumber, FALSE);
 }
 
@@ -125,7 +125,7 @@ void PrintWinError(WCHAR const* functionName, WCHAR const* apiName, DWORD const 
 /// </summary>
 /// <param name="functionName">Name of the function calling the failing Windows API function.</param>
 /// <param name="apiName">Name of the failing Windows API function.</param>
-void PrintLastError(WCHAR const* functionName, WCHAR const* apiName) {
+void PrintLastError(const PWCHAR functionName, const PWCHAR apiName) {
 	PrintWinError(functionName, apiName, GetLastError());
 }
 
@@ -135,6 +135,6 @@ void PrintLastError(WCHAR const* functionName, WCHAR const* apiName) {
 /// <param name="functionName">Name of the function calling the failing Windows API function.</param>
 /// <param name="apiName">Name of the failing Windows API function.</param>
 /// <param name="errorStatus">NTSTATUS of failing function.</param>
-void PrintNtStatus(WCHAR const* functionName, WCHAR const* apiName, NTSTATUS const errorStatus) {
-	printError(functionName, apiName, (DWORD)errorStatus, TRUE);
+void PrintNtStatus(const PWCHAR functionName, const PWCHAR apiName, const NTSTATUS errorStatus) {
+	printError(functionName, apiName, (DWORD) errorStatus, TRUE);
 }

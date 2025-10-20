@@ -34,18 +34,18 @@
 
 #include "ApiErrorHandler.h"
 
-// ======== Private data ========
+// ******** Private data ********
 
-// Hopefully the file path will be less than 1,023 characters...
-WCHAR fileName[1024];
+// Hopefully the file path will be less than MAX_PATH - 1 characters...
+WCHAR fileName[MAX_PATH];
 
-// ======== Public methods ========
+// ******** Public methods ********
 
 /// <summary>
 /// Print the version of the supplied module file.
 /// </summary>
 /// <param name="moduleName">Name of the module.</param>
-void PrintModuleVersion(WCHAR const * moduleName) {
+void PrintModuleVersion(const PWCHAR moduleName) {
    // Name of this function for error messages.
    WCHAR const * functionName = L"PrintModuleVersion";
 

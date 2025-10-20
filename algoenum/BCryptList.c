@@ -18,8 +18,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Purpose: Printing of texts for error codes.
-//
 // Author: Frank Schwab
 //
 // Version: 1.1.0
@@ -36,18 +34,18 @@
 #include "ApiErrorHandler.h"
 #include "PrintModVersion.h"
 
-// ======== Private constants ========
+// ******** Private constants ********
 
 #define RC_OK 0
 #define RC_ERR 0xff
 
-// ======== Private methods ========
+// ******** Private methods ********
 
 /// <summary>
 /// Print the type of the elements in the list.
 /// </summary>
 /// <param name="listType">BCrypt algorithm type.</param>
-void printAlgorithmTypeName(const ULONG algorithmType) {
+static void printAlgorithmTypeName(const ULONG algorithmType) {
 	_putws(L"");
 
 	switch (algorithmType) {
@@ -87,7 +85,7 @@ void printAlgorithmTypeName(const ULONG algorithmType) {
 /// <param name="pAlgoList">Pointer to the list of BCrypt algorithm identifiers.</param>
 /// <param name="algoCount">Number of algorithms.</param>
 /// <returns>Pointer to the local copy of the algorithm name pointers.</returns>
-LPWSTR* copyAlgorithmNames(const HANDLE hHeap, BCRYPT_ALGORITHM_IDENTIFIER* pAlgoList, const ULONG algoCount) {
+static LPWSTR* copyAlgorithmNames(const HANDLE hHeap, BCRYPT_ALGORITHM_IDENTIFIER* const pAlgoList, const ULONG algoCount) {
 	WCHAR const* functionName = L"copyAlgorithmNames";
 
 	LPWSTR* pSortedList = HeapAlloc(hHeap, 0, algoCount * sizeof(LPWSTR));
@@ -123,7 +121,7 @@ int compareNames(const void* a, const void* b) {
 /// Print the list of algorithm names for the specified type.
 /// </summary>
 /// <param name="listType">BCrypt algorithm type.</param>
-BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
+static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
 	WCHAR const* functionName = L"listForType";
 
 	// 1. Print the algorithm type.
@@ -170,7 +168,7 @@ BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
 	return TRUE;
 }
 
-// ======== Public methods ========
+// ******** Public methods ********
 
 /// <summary>
 /// Print the names of all BCrypt algorithms.

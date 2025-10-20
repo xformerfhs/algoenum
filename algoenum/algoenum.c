@@ -35,13 +35,13 @@
 
 #include "BCryptList.h"
 
-// ======== Private constants ========
+// ******** Private constants ********
 
 #define RC_OK 0
 #define RC_CMD_ERR 1
 #define RC_PROC_ERR 2
 
-// ======== Main method ========
+// ******** Main method ********
 
 int __cdecl wmain(int const argc, wchar_t const* argv[]) {
 	(void)_setmode(_fileno(stdout), _O_U16TEXT);  // So the console (stdout) is able to display unicode characters
