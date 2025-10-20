@@ -86,7 +86,7 @@ static void printAlgorithmTypeName(const ULONG algorithmType) {
 /// <param name="algoCount">Number of algorithms.</param>
 /// <returns>Pointer to the local copy of the algorithm name pointers.</returns>
 static LPWSTR* copyAlgorithmNames(const HANDLE hHeap, BCRYPT_ALGORITHM_IDENTIFIER* const pAlgoList, const ULONG algoCount) {
-	WCHAR const* functionName = L"copyAlgorithmNames";
+	const PWCHAR functionName = L"copyAlgorithmNames";
 
 	LPWSTR* pSortedList = HeapAlloc(hHeap, 0, algoCount * sizeof(LPWSTR));
 	if (pSortedList == NULL) {
@@ -122,7 +122,7 @@ int compareNames(const void* a, const void* b) {
 /// </summary>
 /// <param name="listType">BCrypt algorithm type.</param>
 static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
-	WCHAR const* functionName = L"listForType";
+	const PWCHAR functionName = L"listForType";
 
 	// 1. Print the algorithm type.
 	printAlgorithmTypeName(algorithmType);
@@ -174,7 +174,7 @@ static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
 /// Print the names of all BCrypt algorithms.
 /// </summary>
 unsigned char ListAllTypes() {
-	WCHAR const* functionName = L"ListAllTypes";
+	const PWCHAR functionName = L"ListAllTypes";
 
 	// 1. Print header.
 	fputws(L"\nList of Bcrypt ", stdout);

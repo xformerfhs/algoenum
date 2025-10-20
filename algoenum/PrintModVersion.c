@@ -47,7 +47,7 @@ WCHAR fileName[MAX_PATH];
 /// <param name="moduleName">Name of the module.</param>
 void PrintModuleVersion(const PWCHAR moduleName) {
    // Name of this function for error messages.
-   WCHAR const * functionName = L"PrintModuleVersion";
+   const PWCHAR functionName = L"PrintModuleVersion";
 
    // Getting the version of a loaded module is ridiciously complicated.
    // And each step can fail...
