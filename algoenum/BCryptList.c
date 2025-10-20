@@ -30,6 +30,7 @@
 #include <Windows.h>
 #include <bcrypt.h>
 #include <stdio.h>
+#include <conio.h>
 
 #include "ApiErrorHandler.h"
 #include "PrintModVersion.h"
@@ -46,7 +47,7 @@
 /// </summary>
 /// <param name="listType">BCrypt algorithm type.</param>
 static void printAlgorithmTypeName(const ULONG algorithmType) {
-	_putws(L"");
+	_putwch_nolock(L'\n');
 
 	switch (algorithmType) {
 	case BCRYPT_CIPHER_OPERATION:
@@ -162,7 +163,7 @@ static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
 	BCryptFreeBuffer(pAlgoList);
 
 	// 6. Add a new line.
-	_putws(L"");
+	_putwch_nolock(L'\n');
 
 	return TRUE;
 }
