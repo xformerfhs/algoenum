@@ -106,7 +106,6 @@ static LPWSTR* copyAlgorithmNames(const HANDLE hHeap, BCRYPT_ALGORITHM_IDENTIFIE
 	return pSortedList;
 }
 
-
 /// <summary>
 /// Comparison function for qsort.
 /// </summary>
@@ -167,6 +166,7 @@ static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
 
 	return TRUE;
 }
+
 
 // ******** Public methods ********
 
