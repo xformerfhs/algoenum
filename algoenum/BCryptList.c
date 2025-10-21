@@ -20,13 +20,15 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.2.0
+// Version: 1.3.0
 //
 // Change history:
 //    2023-12-01: V1.0.0: Created.
 //    2024-12-14: V1.1.0: Sorted algorithm name lists.
 //    2025-10-21: V1.2.0: Corrected error message, if heap allocation failed.
 //                        Get output file pointer only once.
+//    2025-10-21: V1.2.1: Simplified header output.
+//    2025-10-21: V1.3.0: Use shellsort, instead of quicksort.
 //
 
 #include <Windows.h>
@@ -46,6 +48,33 @@
 // ******** Private methods ********
 
 /// <summary>
+/// Sort the list of algorithm names with the shell sort algorithm.
+/// </summary>
+/// <param name="pAlgorithmNames">Pointer to list of algorithm names.</param>
+/// <param name="algorithmCount">Count of algorithm names.</param>
+static void shellSort(LPWSTR* pAlgorithmNames, const USHORT algorithmCount) {
+	USHORT stepSize[] = {13, 4, 1};
+
+	for (USHORT s = 0; s < sizeof(stepSize) / sizeof(stepSize[0]); s++) {
+		USHORT step = stepSize[s];
+
+		for (USHORT i = step; i < algorithmCount; i++) {
+			LPWSTR insertionName = pAlgorithmNames[i];
+			USHORT insertionIndex = i;
+			
+			while (insertionIndex >= step &&
+					 wcscmp(insertionName, pAlgorithmNames[insertionIndex - step]) < 0) {
+				pAlgorithmNames[insertionIndex] = pAlgorithmNames[insertionIndex - step];
+            insertionIndex -= step;
+			}
+
+         if (insertionIndex != i)
+				pAlgorithmNames[insertionIndex] = insertionName;
+		}
+   }
+}
+
+/// <summary>
 /// Print the type of the elements in the list.
 /// </summary>
 /// <param name="listType">BCrypt algorithm type.</param>
@@ -54,34 +83,34 @@ static void printAlgorithmTypeName(const ULONG algorithmType, FILE* fStdOut) {
 
 	switch (algorithmType) {
 	case BCRYPT_CIPHER_OPERATION:
-		fputws(L"Symmetric ciphers:\n", fStdOut);
+		fputws(L"Symmetric ciphers", fStdOut);
 		break;
 
 	case BCRYPT_HASH_OPERATION:
-		fputws(L"Hashes:\n", fStdOut);
+		fputws(L"Hashes", fStdOut);
 		break;
 
 	case BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION:
-		fputws(L"Asymmetric ciphers:\n", fStdOut);
+		fputws(L"Asymmetric ciphers", fStdOut);
 		break;
 
 	case BCRYPT_SECRET_AGREEMENT_OPERATION:
-		fputws(L"Secret agreements:\n", fStdOut);
+		fputws(L"Secret agreements", fStdOut);
 		break;
 
 	case BCRYPT_SIGNATURE_OPERATION:
-		fputws(L"Signatures:\n", fStdOut);
+		fputws(L"Signatures", fStdOut);
 		break;
 
 	case BCRYPT_RNG_OPERATION:
-		fputws(L"Pseudorandom Number Generators:\n", fStdOut);
+		fputws(L"Pseudorandom Number Generators", fStdOut);
 		break;
 
 	default:
-		fwprintf(fStdOut, L"Unknown algorithm type: 0x%x\n", algorithmType);
+		fwprintf(fStdOut, L"Unknown algorithm type 0x%x", algorithmType);
 	}
 
-	_putwc_nolock(L'\n', fStdOut);
+   fputws(L":\n\n", fStdOut);
 }
 
 /// <summary>
@@ -107,16 +136,6 @@ static LPWSTR* copyAlgorithmNamePointers(const HANDLE hHeap, BCRYPT_ALGORITHM_ID
 		*pName++ = pActAlgo++->pszName;
 
 	return pNameList;
-}
-
-/// <summary>
-/// Comparison function for qsort.
-/// </summary>
-/// <param name="a">Pointer to one element.</param>
-/// <param name="b">Pointer to other element.</param>
-/// <returns>Negative, if *a is less than *b, 0, if *a == *b and positive, if *a greater than *b.</returns>
-int compareNames(const void* a, const void* b) {
-	return wcscmp(*(LPWSTR const*)a, *(LPWSTR const*)b);
 }
 
 /// <summary>
@@ -153,7 +172,7 @@ static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
 	}
 
 	// 3.2 Sort the string pointers in the list.
-	qsort(pSortedList, algoCount, sizeof(LPWSTR), compareNames);
+   shellSort(pSortedList, (USHORT)algoCount);
 
 	// 4. Print the sorted list of names.
 
