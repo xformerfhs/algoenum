@@ -20,7 +20,7 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.3.0
+// Version: 1.4.0
 //
 // Change history:
 //    2023-12-01: V1.0.0: Created.
@@ -29,6 +29,7 @@
 //                        Get output file pointer only once.
 //    2025-10-21: V1.2.1: Simplified header output.
 //    2025-10-21: V1.3.0: Use shellsort, instead of quicksort.
+//    2025-10-22: V1.4.0: List all types and collect overall reasult.
 //
 
 #include <Windows.h>
@@ -104,6 +105,10 @@ static void printAlgorithmTypeName(const ULONG algorithmType, FILE* fStdOut) {
 
 	case BCRYPT_RNG_OPERATION:
 		fputws(L"Pseudorandom Number Generators", fStdOut);
+		break;
+
+	case BCRYPT_KEY_DERIVATION_OPERATION:
+		fputws(L"Key derivation", fStdOut);
 		break;
 
 	default:
@@ -218,17 +223,15 @@ unsigned char ListAllTypes() {
 	}
 
 	// 3. Print lists for each type.
-	if (listForType(hHeap, BCRYPT_CIPHER_OPERATION) == FALSE)
-		return RC_ERR;
-	if (listForType(hHeap, BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION) == FALSE)
-		return RC_ERR;
-	if (listForType(hHeap, BCRYPT_HASH_OPERATION) == FALSE)
-		return RC_ERR;
-	if (listForType(hHeap, BCRYPT_SECRET_AGREEMENT_OPERATION) == FALSE)
-		return RC_ERR;
-	if (listForType(hHeap, BCRYPT_SIGNATURE_OPERATION) == FALSE)
-		return RC_ERR;
-	if (listForType(hHeap, BCRYPT_RNG_OPERATION) == FALSE)
+	BOOL result = listForType(hHeap, BCRYPT_CIPHER_OPERATION);
+	result &= listForType(hHeap, BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION);
+	result &= listForType(hHeap, BCRYPT_HASH_OPERATION);
+	result &= listForType(hHeap, BCRYPT_SECRET_AGREEMENT_OPERATION);
+	result &= listForType(hHeap, BCRYPT_SIGNATURE_OPERATION);
+	result &= listForType(hHeap, BCRYPT_RNG_OPERATION);
+	result &= listForType(hHeap, BCRYPT_KEY_DERIVATION_OPERATION);
+
+   if (result == FALSE)
 		return RC_ERR;
 
 	return RC_OK;
