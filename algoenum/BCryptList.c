@@ -52,7 +52,7 @@
 /// </summary>
 /// <param name="pAlgorithmNames">Pointer to list of algorithm names.</param>
 /// <param name="algorithmCount">Count of algorithm names.</param>
-static void shellSort(LPWSTR* pAlgorithmNames, const USHORT algorithmCount) {
+static void shellSort(LPWSTR* const pAlgorithmNames, const USHORT algorithmCount) {
 	USHORT stepSize[] = {13, 4, 1};
 
 	for (USHORT s = 0; s < sizeof(stepSize) / sizeof(stepSize[0]); s++) {
@@ -68,7 +68,7 @@ static void shellSort(LPWSTR* pAlgorithmNames, const USHORT algorithmCount) {
             insertionIndex -= step;
 			}
 
-         if (insertionIndex != i)
+			if (insertionIndex != i)
 				pAlgorithmNames[insertionIndex] = insertionName;
 		}
    }
