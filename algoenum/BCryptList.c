@@ -211,7 +211,7 @@ unsigned char ListAllTypes() {
 	// 1. Print header.
 	fputws(L"\nList of Bcrypt ", stdout);
 	PrintModuleVersion(L"bcrypt.dll");
-	_putws(L" algorithms by type:");
+	_putws(L" algorithms by type:\n");
 	
 	// 2. Get the process heap to use in the list functions.
 	
