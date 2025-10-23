@@ -29,7 +29,7 @@
 //                        Get output file pointer only once.
 //    2025-10-21: V1.2.1: Simplified header output.
 //    2025-10-21: V1.3.0: Use shellsort, instead of quicksort.
-//    2025-10-22: V1.4.0: List all types and collect overall reasult.
+//    2025-10-22: V1.4.0: List all types and collect overall result.
 //
 
 #include <Windows.h>
