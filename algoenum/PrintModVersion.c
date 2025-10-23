@@ -45,7 +45,8 @@ WCHAR fileName[MAX_PATH];
 /// Print the version of the supplied module file.
 /// </summary>
 /// <param name="moduleName">Name of the module.</param>
-void PrintModuleVersion(const PWCHAR moduleName) {
+/// <param name="fStdOut">Stdout file pointer.</param>
+void PrintModuleVersion(const PWCHAR moduleName, FILE* fStdOut) {
    // Name of this function for error messages.
    const PWCHAR functionName = L"PrintModuleVersion";
 
@@ -119,9 +120,10 @@ void PrintModuleVersion(const PWCHAR moduleName) {
    // Hooray! Done! We can print the version information.
    // But wait... The version is hidden in DWORDs which we have to untangle ourselves.
    // This is so bizarre...
-   wprintf(L"V%d.%d.%d.%d",
-           (pfi->dwProductVersionMS >> 16) & 0xffff,
-           pfi->dwProductVersionMS & 0xffff,
-           (pfi->dwProductVersionLS >> 16) & 0xffff,
-           pfi->dwProductVersionLS & 0xffff);
+   fwprintf(fStdOut,
+            L"V%d.%d.%d.%d",
+            (pfi->dwProductVersionMS >> 16) & 0xffff,
+            pfi->dwProductVersionMS & 0xffff,
+            (pfi->dwProductVersionLS >> 16) & 0xffff,
+            pfi->dwProductVersionLS & 0xffff);
 }

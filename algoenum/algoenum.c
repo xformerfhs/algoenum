@@ -22,12 +22,13 @@
 // 
 // Author: Frank Schwab
 //
-// Version: 1.1.0
+// Version: 1.2.0
 //
 // Change history:
 //    2024-06-01: V1.0.0: Created.
 //    2024-11-14: V1.0.1: Return code depends on result of printing the lists.
-//    2025-10-14: V1.1.0: List all types.
+//    2025-10-22: V1.1.0: List all types.
+//    2025-10-23: V1.2.0: Simplified output of results.
 //
 
 #include <fcntl.h>

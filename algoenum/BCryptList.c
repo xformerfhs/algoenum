@@ -79,6 +79,7 @@ static void shellSort(LPWSTR* const pAlgorithmNames, const USHORT algorithmCount
 /// Print the type of the elements in the list.
 /// </summary>
 /// <param name="listType">BCrypt algorithm type.</param>
+/// <param name="fStdOut">Stdout file pointer.</param>
 static void printAlgorithmTypeName(const ULONG algorithmType, FILE* fStdOut) {
    _putwc_nolock(L'\n', fStdOut);
 
@@ -147,10 +148,9 @@ static LPWSTR* copyAlgorithmNamePointers(const HANDLE hHeap, BCRYPT_ALGORITHM_ID
 /// Print the list of algorithm names for the specified type.
 /// </summary>
 /// <param name="listType">BCrypt algorithm type.</param>
-static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
+/// <param name="fStdOut">Stdout file pointer.</param>
+static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType, FILE* fStdOut) {
 	const PWCHAR functionName = L"listForType";
-
-	FILE* fStdOut = stdout;
 
 	// 1. Print the algorithm type.
 	printAlgorithmTypeName(algorithmType, fStdOut);
@@ -208,10 +208,12 @@ static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType) {
 unsigned char ListAllTypes() {
 	const PWCHAR functionName = L"ListAllTypes";
 
+   FILE* fStdOut = stdout;
+
 	// 1. Print header.
-	fputws(L"\nList of Bcrypt ", stdout);
-	PrintModuleVersion(L"bcrypt.dll");
-	_putws(L" algorithms by type:\n");
+	fputws(L"\nList of Bcrypt ", fStdOut);
+	PrintModuleVersion(L"bcrypt.dll", fStdOut);
+	fputws(L" algorithms by type:\n\n", fStdOut);
 	
 	// 2. Get the process heap to use in the list functions.
 	
@@ -223,13 +225,13 @@ unsigned char ListAllTypes() {
 	}
 
 	// 3. Print lists for each type.
-	BOOL result = listForType(hHeap, BCRYPT_CIPHER_OPERATION);
-	result &= listForType(hHeap, BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION);
-	result &= listForType(hHeap, BCRYPT_HASH_OPERATION);
-	result &= listForType(hHeap, BCRYPT_SECRET_AGREEMENT_OPERATION);
-	result &= listForType(hHeap, BCRYPT_SIGNATURE_OPERATION);
-	result &= listForType(hHeap, BCRYPT_RNG_OPERATION);
-	result &= listForType(hHeap, BCRYPT_KEY_DERIVATION_OPERATION);
+	BOOL result = listForType(hHeap, BCRYPT_CIPHER_OPERATION, fStdOut);
+	result &= listForType(hHeap, BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION, fStdOut);
+	result &= listForType(hHeap, BCRYPT_HASH_OPERATION, fStdOut);
+	result &= listForType(hHeap, BCRYPT_SECRET_AGREEMENT_OPERATION, fStdOut);
+	result &= listForType(hHeap, BCRYPT_SIGNATURE_OPERATION, fStdOut);
+	result &= listForType(hHeap, BCRYPT_RNG_OPERATION, fStdOut);
+	result &= listForType(hHeap, BCRYPT_KEY_DERIVATION_OPERATION, fStdOut);
 
    if (result == FALSE)
 		return RC_ERR;
