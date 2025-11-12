@@ -20,7 +20,7 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.4.1
+// Version: 2.0.0
 //
 // Change history:
 //    2023-12-01: V1.0.0: Created.
@@ -31,6 +31,7 @@
 //    2025-10-21: V1.3.0: Use shellsort, instead of quicksort.
 //    2025-10-22: V1.4.0: List all types and collect overall result.
 //    2025-11-12: V1.4.1: Removed unnecessary compare in shell sort.
+//    2025-11-12: V2.0.0: Print to console in console code page.
 //
 
 #define _CRT_DISABLE_PERFCRIT_LOCKS 1
@@ -40,6 +41,7 @@
 #include <stdio.h>
 
 #include "ApiErrorHandler.h"
+#include "Console.h"
 #include "PrintModVersion.h"
 
 
@@ -47,7 +49,6 @@
 
 #define RC_OK  0
 #define RC_ERR 0xff
-
 
 // ******** Private methods ********
 
@@ -88,38 +89,38 @@ static void printAlgorithmTypeName(const ULONG algorithmType, FILE* fStdOut) {
 
 	switch (algorithmType) {
 	case BCRYPT_CIPHER_OPERATION:
-		fputws(L"Symmetric ciphers", fStdOut);
+		fputs("Symmetric ciphers", fStdOut);
 		break;
 
 	case BCRYPT_HASH_OPERATION:
-		fputws(L"Hashes", fStdOut);
+		fputs("Hashes", fStdOut);
 		break;
 
 	case BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION:
-		fputws(L"Asymmetric ciphers", fStdOut);
+		fputs("Asymmetric ciphers", fStdOut);
 		break;
 
 	case BCRYPT_SECRET_AGREEMENT_OPERATION:
-		fputws(L"Secret agreements", fStdOut);
+		fputs("Secret agreements", fStdOut);
 		break;
 
 	case BCRYPT_SIGNATURE_OPERATION:
-		fputws(L"Signatures", fStdOut);
+		fputs("Signatures", fStdOut);
 		break;
 
 	case BCRYPT_RNG_OPERATION:
-		fputws(L"Pseudorandom Number Generators", fStdOut);
+		fputs("Pseudorandom Number Generators", fStdOut);
 		break;
 
 	case BCRYPT_KEY_DERIVATION_OPERATION:
-		fputws(L"Key derivation", fStdOut);
+		fputs("Key derivation", fStdOut);
 		break;
 
 	default:
-		fwprintf(fStdOut, L"Unknown algorithm type 0x%x", algorithmType);
+		fwprintf(stderr, L"Unknown algorithm type 0x%x", algorithmType);
 	}
 
-   fputws(L":\n\n", fStdOut);
+   fputs(":\n\n", fStdOut);
 }
 
 /// <summary>
@@ -134,7 +135,7 @@ static LPWSTR* copyAlgorithmNamePointers(const HANDLE hHeap, BCRYPT_ALGORITHM_ID
 
 	LPWSTR* pNameList = HeapAlloc(hHeap, 0, algoCount * sizeof(LPWSTR));
 	if (pNameList == NULL) {
-      (void) fwprintf(stderr, L"Function \"%s\": HeapAlloc for algorithm name list failed.\n", functionName);
+      PrintWideFormatToConsole(stderr, L"Function \"%s\": HeapAlloc for algorithm name list failed.\n", functionName);
 		return pNameList;
 	}
 
@@ -187,13 +188,13 @@ static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType, FILE* fSt
 	// Pointer to algorithm identifier.
 	LPWSTR* pActAlgoName = pSortedList;
 	for (ULONG i = algoCount; i > 0; i--) {
-		fputws(L"   ", fStdOut);
-		fputws(*pActAlgoName++, fStdOut);
-		_putwc_nolock(L'\n', fStdOut);
+		fputs("   ", fStdOut);
+		fputs(AsConsoleCodePageString(*pActAlgoName++), fStdOut);
+		_putc_nolock('\n', fStdOut);
 	}
 
 	// 5. Add a new line at the end of the list.
-	_putwc_nolock(L'\n', fStdOut);
+	_putc_nolock('\n', fStdOut);
 
 	// 6. Release memory.
    HeapFree(hHeap, 0, pSortedList);  // This must be freed *before* the algorithm list is freed.
@@ -214,9 +215,9 @@ unsigned char ListAllTypes() {
    FILE* fStdOut = stdout;
 
 	// 1. Print header.
-	fputws(L"\nList of Bcrypt ", fStdOut);
+	fputs("\nList of Bcrypt ", fStdOut);
 	PrintModuleVersion(L"bcrypt.dll", fStdOut);
-	fputws(L" algorithms by type:\n\n", fStdOut);
+	fputs(" algorithms by type:\n\n", fStdOut);
 	
 	// 2. Get the process heap to use in the list functions.
 	

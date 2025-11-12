@@ -22,18 +22,20 @@
 // 
 // Author: Frank Schwab
 //
-// Version: 1.2.0
+// Version: 2.0.0
 //
 // Change history:
 //    2024-06-01: V1.0.0: Created.
 //    2024-11-14: V1.0.1: Return code depends on result of printing the lists.
 //    2025-10-22: V1.1.0: List all types.
 //    2025-10-23: V1.2.0: Simplified output of results.
+//    2025-11-12: V2.0.0: Output printed in console code page.
 //
 
 #include <fcntl.h>
 #include <io.h>
 #include <stdio.h>
+#include <Windows.h>
 
 #include "BCryptList.h"
 
@@ -46,9 +48,6 @@
 // ******** Main method ********
 
 int __cdecl wmain(int const argc, wchar_t const* argv[]) {
-	(void)_setmode(_fileno(stdout), _O_U16TEXT);  // So the console (stdout) is able to display unicode characters
-	(void)_setmode(_fileno(stderr), _O_U16TEXT);  // So the console (stderr) is able to display unicode characters
-
 	if (ListAllTypes() == 0)
 		return RC_OK;
 	else

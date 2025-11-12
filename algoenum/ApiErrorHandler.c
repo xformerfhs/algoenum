@@ -22,15 +22,18 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.0.0
+// Version: 2.0.0
 //
 // Change history:
 //    2023-11-18: V1.0.0: Created.
+//    2025-11-12: V2.0.0: Print messages in console code page.
 //
 
 #include <Windows.h>
 #include <bcrypt.h>
 #include <stdio.h>
+
+#include "Console.h"
 
 // ******** Private constants ********
 
@@ -38,7 +41,8 @@
 
 // ******** Private variables ********
 
-WCHAR messageBuffer[MESSAGE_BUFFER_LENGTH];
+/// Buffer for wide character error message text.
+static WCHAR messageBuffer[MESSAGE_BUFFER_LENGTH];
 
 // ******** Private methods ********
 
@@ -85,27 +89,26 @@ static DWORD getSystemErrorMessage(const DWORD errorNumber) {
 /// <param name="isNtStatus">Is the error number an NTSTATUS.</param>
 static void printError(const PWCHAR functionName, const PWCHAR apiName, const DWORD errorNumber, const BOOL isNtStatus) {
 	DWORD msgLen;
-	if (isNtStatus == FALSE) {
+	if (isNtStatus == FALSE)
 		msgLen = getSystemErrorMessage(errorNumber);
-	} else {
+	else
 		msgLen = getNtStatusErrorMessage(errorNumber);
-	}
 
 	DWORD le = 0;
 	if (msgLen == 0)
 		le = GetLastError();
 
-	fwprintf(stderr, L"Function \"%s\", API function \"%s\" failed with error %d (0x%08x): ", 
-				functionName, 
-				apiName,
-				errorNumber,
-				errorNumber);
+   PrintWideFormatToConsole(stderr,
+									 L"Function \"%s\", API function \"%s\" failed with error %ld (0x%08lx): ",
+									 functionName,
+									 apiName,
+									 errorNumber,
+									 errorNumber);
 
-	if (msgLen > 0) {
-		fputws(messageBuffer, stderr);
-	} else {
-		fwprintf(stderr, L"Could not get error message (FormatMessage error code = %d)\n", le);
-	}
+	if (msgLen > 0)
+		fputs(AsConsoleCodePageString(messageBuffer), stderr);
+	else
+		fprintf(stderr, "Could not get error message (FormatMessage error code = %ld (0x%08lx)\n", le, le);
 }
 
 // ******** Public methods ********

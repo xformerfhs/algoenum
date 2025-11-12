@@ -1,5 +1,5 @@
 //
-// SPDX-FileCopyrightText: Copyright 2024 Frank Schwab
+// SPDX-FileCopyrightText: Copyright 2024-2025 Frank Schwab
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -22,17 +22,19 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.0.1
+// Version: 2.0.0
 //
 // Change history:
 //    2024-11-12: V1.0.0: Created.
-//    2024-11-13: V1.0.1: Created.
+//    2024-11-13: V1.0.1: Small change.
+//    2025-11-12: V2.0.0: Print to console in console code page.
 //
 
 #include <Windows.h>
 #include <stdio.h>
 
 #include "ApiErrorHandler.h"
+#include "Console.h"
 
 // ******** Private data ********
 
@@ -120,10 +122,12 @@ void PrintModuleVersion(const PWCHAR moduleName, FILE* fStdOut) {
    // Hooray! Done! We can print the version information.
    // But wait... The version is hidden in DWORDs which we have to untangle ourselves.
    // This is so bizarre...
-   fwprintf(fStdOut,
-            L"V%d.%d.%d.%d",
-            (pfi->dwProductVersionMS >> 16) & 0xffff,
-            pfi->dwProductVersionMS & 0xffff,
-            (pfi->dwProductVersionLS >> 16) & 0xffff,
-            pfi->dwProductVersionLS & 0xffff);
+   PrintWideFormatToConsole(
+      fStdOut,
+      L"V%d.%d.%d.%d",
+      (pfi->dwProductVersionMS >> 16) & 0xffff,
+      pfi->dwProductVersionMS & 0xffff,
+      (pfi->dwProductVersionLS >> 16) & 0xffff,
+      pfi->dwProductVersionLS & 0xffff
+   );
 }
