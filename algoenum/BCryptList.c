@@ -20,7 +20,7 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.4.0
+// Version: 1.4.1
 //
 // Change history:
 //    2023-12-01: V1.0.0: Created.
@@ -30,7 +30,10 @@
 //    2025-10-21: V1.2.1: Simplified header output.
 //    2025-10-21: V1.3.0: Use shellsort, instead of quicksort.
 //    2025-10-22: V1.4.0: List all types and collect overall result.
+//    2025-11-12: V1.4.1: Removed unnecessary compare in shell sort.
 //
+
+#define _CRT_DISABLE_PERFCRIT_LOCKS 1
 
 #include <Windows.h>
 #include <bcrypt.h>
@@ -69,8 +72,8 @@ static void shellSort(LPWSTR* const pAlgorithmNames, const USHORT algorithmCount
             insertionIndex -= step;
 			}
 
-			if (insertionIndex != i)
-				pAlgorithmNames[insertionIndex] = insertionName;
+         // This may be the same as the original position. It is faster to always assign, than to compare first.
+			pAlgorithmNames[insertionIndex] = insertionName;
 		}
    }
 }
@@ -167,7 +170,7 @@ static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType, FILE* fSt
 	// 3. Sort the algorithm names.
 
 	// 3.1 Copy the pointers to the names into a local memory area.
-	//     This is necessary, so that this list can be sorted with qsort.
+	//     This is necessary, so that this list can be sorted.
 	
 	// Pointer to list of string pointers to algorithm names.
 	LPWSTR* pSortedList = copyAlgorithmNamePointers(hHeap, pAlgoList, algoCount);
