@@ -47,7 +47,7 @@
 
 // ******** Main method ********
 
-int __cdecl wmain(int const argc, wchar_t const* argv[]) {
+int __cdecl main(int const argc, char const* argv[]) {
 	if (ListAllTypes() == 0)
 		return RC_OK;
 	else

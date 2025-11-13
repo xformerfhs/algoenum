@@ -141,12 +141,14 @@
     <ClCompile Include="ApiErrorHandler.c" />
     <ClCompile Include="BCryptList.c" />
     <ClCompile Include="Console.c" />
+    <ClCompile Include="NumberFormatter.c" />
     <ClCompile Include="PrintModVersion.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApiErrorHandler.h" />
     <ClInclude Include="BCryptList.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="NumberFormatter.h" />
     <ClInclude Include="PrintModVersion.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

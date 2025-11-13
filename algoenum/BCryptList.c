@@ -131,11 +131,11 @@ static void printAlgorithmTypeName(const ULONG algorithmType, FILE* fStdOut) {
 /// <param name="algoCount">Number of algorithms.</param>
 /// <returns>Pointer to the local copy of the algorithm name pointers.</returns>
 static LPWSTR* copyAlgorithmNamePointers(const HANDLE hHeap, BCRYPT_ALGORITHM_IDENTIFIER* const pAlgoList, const ULONG algoCount) {
-	const PWCHAR functionName = L"copyAlgorithmNames";
+	const PCHAR functionName = "copyAlgorithmNames";
 
 	LPWSTR* pNameList = HeapAlloc(hHeap, 0, algoCount * sizeof(LPWSTR));
 	if (pNameList == NULL) {
-      PrintWideFormatToConsole(stderr, L"Function \"%s\": HeapAlloc for algorithm name list failed.\n", functionName);
+      fprintf(stderr, "Function \"%s\": HeapAlloc for algorithm name list failed.\n", functionName);
 		return pNameList;
 	}
 
@@ -154,7 +154,7 @@ static LPWSTR* copyAlgorithmNamePointers(const HANDLE hHeap, BCRYPT_ALGORITHM_ID
 /// <param name="listType">BCrypt algorithm type.</param>
 /// <param name="fStdOut">Stdout file pointer.</param>
 static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType, FILE* fStdOut) {
-	const PWCHAR functionName = L"listForType";
+	const PCHAR functionName = "listForType";
 
 	// 1. Print the algorithm type.
 	printAlgorithmTypeName(algorithmType, fStdOut);
@@ -164,7 +164,7 @@ static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType, FILE* fSt
 	BCRYPT_ALGORITHM_IDENTIFIER* pAlgoList;
 	NTSTATUS nts = BCryptEnumAlgorithms(algorithmType, &algoCount, &pAlgoList, 0);
 	if (nts < 0) {
-		PrintNtStatus(functionName, L"BCryptEnumAlgorithms", nts);
+		PrintNtStatus(functionName, "BCryptEnumAlgorithms", nts);
 		return FALSE;
 	}
 
@@ -210,13 +210,13 @@ static BOOL listForType(const HANDLE hHeap, const ULONG algorithmType, FILE* fSt
 /// Print the names of all BCrypt algorithms.
 /// </summary>
 unsigned char ListAllTypes() {
-	const PWCHAR functionName = L"ListAllTypes";
+	const PCHAR functionName = "ListAllTypes";
 
    FILE* fStdOut = stdout;
 
 	// 1. Print header.
 	fputs("\nList of Bcrypt ", fStdOut);
-	PrintModuleVersion(L"bcrypt.dll", fStdOut);
+	PrintModuleVersion("bcrypt.dll", fStdOut);
 	fputs(" algorithms by type:\n\n", fStdOut);
 	
 	// 2. Get the process heap to use in the list functions.
@@ -224,7 +224,7 @@ unsigned char ListAllTypes() {
 	// Process heap.
 	HANDLE hHeap = GetProcessHeap();
 	if (hHeap == NULL) {
-		PrintLastError(functionName, L"GetProcessHeap");
+		PrintLastError(functionName, "GetProcessHeap");
 		return RC_ERR;
 	}
 

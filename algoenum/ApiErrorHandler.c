@@ -87,7 +87,7 @@ static DWORD getSystemErrorMessage(const DWORD errorNumber) {
 /// <param name="apiName">Name of the failing Windows API function.</param>
 /// <param name="errorNumber">Error number.</param>
 /// <param name="isNtStatus">Is the error number an NTSTATUS.</param>
-static void printError(const PWCHAR functionName, const PWCHAR apiName, const DWORD errorNumber, const BOOL isNtStatus) {
+static void printError(const PCHAR functionName, const PCHAR apiName, const DWORD errorNumber, const BOOL isNtStatus) {
 	DWORD msgLen;
 	if (isNtStatus == FALSE)
 		msgLen = getSystemErrorMessage(errorNumber);
@@ -98,12 +98,12 @@ static void printError(const PWCHAR functionName, const PWCHAR apiName, const DW
 	if (msgLen == 0)
 		le = GetLastError();
 
-   PrintWideFormatToConsole(stderr,
-									 L"Function \"%s\", API function \"%s\" failed with error %ld (0x%08lx): ",
-									 functionName,
-									 apiName,
-									 errorNumber,
-									 errorNumber);
+   fprintf(stderr,
+		     "Function \"%s\", API function \"%s\" failed with error %lu (0x%08lx): ",
+			  functionName,
+			  apiName,
+			  errorNumber,
+			  errorNumber);
 
 	if (msgLen > 0)
 		fputs(AsConsoleCodePageString(messageBuffer), stderr);
@@ -119,7 +119,7 @@ static void printError(const PWCHAR functionName, const PWCHAR apiName, const DW
 /// <param name="functionName">Name of the function calling the failing Windows API function.</param>
 /// <param name="apiName">Name of the failing Windows API function.</param>
 /// <param name="errorNumber">Error number.</param>
-void PrintWinError(const PWCHAR functionName, const PWCHAR apiName, const DWORD errorNumber) {
+void PrintWinError(const PCHAR functionName, const PCHAR apiName, const DWORD errorNumber) {
 	printError(functionName, apiName, errorNumber, FALSE);
 }
 
@@ -128,7 +128,7 @@ void PrintWinError(const PWCHAR functionName, const PWCHAR apiName, const DWORD 
 /// </summary>
 /// <param name="functionName">Name of the function calling the failing Windows API function.</param>
 /// <param name="apiName">Name of the failing Windows API function.</param>
-void PrintLastError(const PWCHAR functionName, const PWCHAR apiName) {
+void PrintLastError(const PCHAR functionName, const PCHAR apiName) {
 	PrintWinError(functionName, apiName, GetLastError());
 }
 
@@ -138,6 +138,6 @@ void PrintLastError(const PWCHAR functionName, const PWCHAR apiName) {
 /// <param name="functionName">Name of the function calling the failing Windows API function.</param>
 /// <param name="apiName">Name of the failing Windows API function.</param>
 /// <param name="errorStatus">NTSTATUS of failing function.</param>
-void PrintNtStatus(const PWCHAR functionName, const PWCHAR apiName, const NTSTATUS errorStatus) {
+void PrintNtStatus(const PCHAR functionName, const PCHAR apiName, const NTSTATUS errorStatus) {
 	printError(functionName, apiName, (DWORD) errorStatus, TRUE);
 }
