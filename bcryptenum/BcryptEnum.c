@@ -46,8 +46,8 @@
 // ******** Main method ********
 
 int __cdecl main(int const argc, char const* argv[]) {
-	if (ListAllTypes() == 0)
-		return RC_OK;
-	else
-		return RC_PROC_ERR;
+   if (ListAllTypes() == 0)
+      return RC_OK;
+   else
+      return RC_PROC_ERR;
 }

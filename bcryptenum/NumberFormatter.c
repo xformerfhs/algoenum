@@ -50,16 +50,16 @@ char numberBuffer[BUFFER_SIZE];
 /// <param name="pDivResult">Pointer to store the division result.</param>
 /// <param name="pModResult">Pointer to store the modulo result.</param>
 static inline void divmod10f32(uint16_t const in, uint16_t* const pDivResult, uint16_t* const pModResult) {
-	uint16_t x = (in | 1) - (in >> 2);
-	uint16_t q = (x >> 4) + x;
+   uint16_t x = (in | 1) - (in >> 2);
+   uint16_t q = (x >> 4) + x;
 
-	x = q;
-	q = (q >> 8) + x;
-	q = (q >> 8) + x;
+   x = q;
+   q = (q >> 8) + x;
+   q = (q >> 8) + x;
 
-	uint16_t divResult = (q >> 3);
-	*pDivResult = divResult;
-	*pModResult = in - ((q & ~7) + (divResult << 1));
+   uint16_t divResult = (q >> 3);
+   *pDivResult = divResult;
+   *pModResult = in - ((q & ~7) + (divResult << 1));
 }
 
 // ******** Public methods ********
@@ -71,27 +71,27 @@ static inline void divmod10f32(uint16_t const in, uint16_t* const pDivResult, ui
 /// <param name="separator">Thousands group separator character.</param>
 /// <returns>Pointer to string of number.</returns>
 char* FormatUint16WithSeparator(uint16_t const aNumber, char const separator) {
-	uint16_t last = aNumber;
-	char* pBuffer = &numberBuffer[BUFFER_SIZE - 1];  // Start at the end of the buffer.
-	*pBuffer-- = 0;  // Set terminating zero.
+   uint16_t last = aNumber;
+   char* pBuffer = &numberBuffer[BUFFER_SIZE - 1];  // Start at the end of the buffer.
+   *pBuffer-- = 0;  // Set terminating zero.
 
-	uint8_t groupCount = 0;
-	do {
-		if (groupCount >= 3) {
-			*pBuffer-- = separator;
-			groupCount = 0;
-		}
+   uint8_t groupCount = 0;
+   do {
+      if (groupCount >= 3) {
+         *pBuffer-- = separator;
+         groupCount = 0;
+      }
 
-		uint16_t divResult;
-		uint16_t modResult;
-		divmod10f32(last, &divResult, &modResult);
+      uint16_t divResult;
+      uint16_t modResult;
+      divmod10f32(last, &divResult, &modResult);
 
-		*pBuffer-- = (char)modResult + '0';
-		groupCount++;
-		last = divResult;
-	} while (last != 0);
+      *pBuffer-- = (char)modResult + '0';
+      groupCount++;
+      last = divResult;
+   } while (last != 0);
 
-	return ++pBuffer;
+   return ++pBuffer;
 }
 
 /// <summary>
@@ -100,7 +100,7 @@ char* FormatUint16WithSeparator(uint16_t const aNumber, char const separator) {
 /// <param name="aNumber">Number to proint.</param>
 /// <returns>Pointer to string of number.</returns>
 char* FormatUint16NumberWithDefaultSeparator(uint16_t const aNumber) {
-	return FormatUint16WithSeparator(aNumber, DEFAULT_SEPARATOR);
+   return FormatUint16WithSeparator(aNumber, DEFAULT_SEPARATOR);
 }
 
 /// <summary>
@@ -109,18 +109,18 @@ char* FormatUint16NumberWithDefaultSeparator(uint16_t const aNumber) {
 /// <param name="aNumber">Number to proint.</param>
 /// <returns>Pointer to string of number.</returns>
 char* FormatUint16Number(uint16_t const aNumber) {
-	uint16_t last = aNumber;
-	char* pBuffer = &numberBuffer[BUFFER_SIZE - 1];  // Start at the end of the buffer.
-	*pBuffer-- = 0;  // Set terminating zero.
+   uint16_t last = aNumber;
+   char* pBuffer = &numberBuffer[BUFFER_SIZE - 1];  // Start at the end of the buffer.
+   *pBuffer-- = 0;  // Set terminating zero.
 
-	do {
-		uint16_t divResult;
-		uint16_t modResult;
-		divmod10f32(last, &divResult, &modResult);
+   do {
+      uint16_t divResult;
+      uint16_t modResult;
+      divmod10f32(last, &divResult, &modResult);
 
-		*pBuffer-- = (char)modResult + '0';
-		last = divResult;
-	} while (last != 0);
+      *pBuffer-- = (char)modResult + '0';
+      last = divResult;
+   } while (last != 0);
 
-	return ++pBuffer;
+   return ++pBuffer;
 }
