@@ -1,4 +1,4 @@
-# Algoenum
+# Bcryptenum
 
 This is a small C program that enumerates all [`BCrypt`](https://learn.microsoft.com/en-us/windows/win32/seccng/cng-portal) (aka Cryptography API: Next Generation (`CNG`)) algorithms on Windows and prints them on the console.
 
