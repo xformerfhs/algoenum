@@ -18,8 +18,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Purpose: Main program for crypto benchmark.
-// 
 // Author: Frank Schwab
 //
 // Version: 2.0.0
