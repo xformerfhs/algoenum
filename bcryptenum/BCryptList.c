@@ -20,7 +20,7 @@
 //
 // Author: Frank Schwab
 //
-// Version: 2.0.0
+// Version: 2.1.0
 //
 // Change history:
 //    2023-12-01: V1.0.0: Created.
@@ -32,6 +32,7 @@
 //    2025-10-22: V1.4.0: List all types and collect overall result.
 //    2025-11-12: V1.4.1: Removed unnecessary compare in shell sort.
 //    2025-11-12: V2.0.0: Print to console in console code page.
+//    2025-11-14: V2.1.0: Removed wide character functions.
 //
 
 #define _CRT_DISABLE_PERFCRIT_LOCKS 1
@@ -85,7 +86,7 @@ static void shellSort(LPWSTR* const pAlgorithmNames, const USHORT algorithmCount
 /// <param name="listType">BCrypt algorithm type.</param>
 /// <param name="fStdOut">Stdout file pointer.</param>
 static void printAlgorithmTypeName(const ULONG algorithmType, FILE* fStdOut) {
-   _putwc_nolock(L'\n', fStdOut);
+   _putc_nolock('\n', fStdOut);
 
 	switch (algorithmType) {
 	case BCRYPT_CIPHER_OPERATION:
@@ -117,7 +118,7 @@ static void printAlgorithmTypeName(const ULONG algorithmType, FILE* fStdOut) {
 		break;
 
 	default:
-		fwprintf(stderr, L"Unknown algorithm type 0x%x", algorithmType);
+		fprintf(stderr, "Unknown algorithm type 0x%lx", algorithmType);
 	}
 
    fputs(":\n\n", fStdOut);
