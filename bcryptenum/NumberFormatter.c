@@ -18,8 +18,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Purpose: A formatter for numbers with thousands grouping separators.
-//
 // Author: Frank Schwab
 //
 // Version: 1.0.0
