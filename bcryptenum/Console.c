@@ -30,6 +30,8 @@
 #include <stdio.h>
 
 // ******** Private constants ********
+
+/// Length of message buffers.
 #define MESSAGE_BUFFER_LENGTH 256
 
 // ******** Private variables ********
